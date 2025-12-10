@@ -1,0 +1,389 @@
+/* Cyberpunk / Neon style CSS for "Cyber Phoenix" site
+   - IDs/classes provided for JS control:
+     #url-input           -> input at the top to enter URLs
+     #cyber-phoenix-btn   -> main neon button
+     #dynamic-box         -> empty box in middle where dashbird elements are added
+     .dashbird            -> each green dashbird element
+     .dashbird.selected   -> state for selected dashbird
+     .dashbird .delete-btn-> delete control inside a dashbird
+     .empty-msg           -> placeholder text inside dynamic box
+*/
+
+/* --- Theme variables --- */
+:root{
+  --bg-1: #05030a;
+  --bg-2: #0b0720;
+  --neon-pink: #ff00c8;
+  --neon-cyan: #00ffe1;
+  --neon-green: #39ff14;
+  --neon-red: #ff2d2d;
+  --glass: rgba(255,255,255,0.03);
+  --glass-2: rgba(255,255,255,0.02);
+  --accent: var(--neon-cyan);
+  --font-sans: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --radius: 14px;
+  --transition-fast: 160ms;
+  --transition-medium: 280ms;
+}
+
+/* --- Base layout --- */
+*{box-sizing:border-box}
+html,body{
+  height:100%;
+  margin:0;
+  font-family:var(--font-sans);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  color:#e8f8f5;
+  background:
+    radial-gradient(1200px 500px at 10% 10%, rgba(110,0,140,0.12), transparent 8%),
+    radial-gradient(1000px 400px at 90% 90%, rgba(0,220,160,0.04), transparent 8%),
+    linear-gradient(180deg, var(--bg-1), var(--bg-2));
+  overflow-y:auto;
+  padding:36px;
+}
+
+/* subtle animated grid / tech lines overlay */
+body::before{
+  content:"";
+  pointer-events:none;
+  position:fixed;
+  inset:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.01) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.01) 1px, transparent 1px);
+  background-size: 140px 140px, 140px 140px;
+  mix-blend-mode:overlay;
+  opacity:0.08;
+  transform:translateZ(0);
+  animation: subtleShift 12s linear infinite;
+}
+@keyframes subtleShift{
+  0%{transform:translateY(0)}
+  50%{transform:translateY(6px)}
+  100%{transform:translateY(0)}
+}
+
+/* --- Container --- */
+.site-wrap{
+  max-width:1100px;
+  margin:0 auto;
+  display:flex;
+  flex-direction:column;
+  gap:28px;
+}
+
+/* --- Top: URL input bar --- */
+#top-bar{
+  display:flex;
+  gap:12px;
+  align-items:center;
+  justify-content:space-between;
+  flex-wrap:wrap;
+}
+#url-input{
+  flex:1 1 520px;
+  min-width:220px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border:1px solid rgba(57,255,20,0.06);
+  box-shadow: 0 4px 28px rgba(0,0,0,0.6), 0 0 18px rgba(57,255,20,0.04), 0 0 6px rgba(0,0,0,0.6) inset;
+  padding:12px 16px;
+  color: #dfffe5;
+  border-radius: 12px;
+  font-size:15px;
+  outline:none;
+  transition: box-shadow var(--transition-medium), transform var(--transition-fast);
+  text-shadow: 0 1px 0 rgba(0,0,0,0.6);
+}
+#url-input::placeholder{ color: rgba(210,255,220,0.45); }
+#url-input:focus{
+  box-shadow: 0 6px 36px rgba(57,255,20,0.08), 0 0 40px rgba(57,255,20,0.14);
+  transform:translateY(-2px);
+  border-color: rgba(57,255,20,0.45);
+}
+
+/* --- Cyber Phoenix button --- */
+#cyber-phoenix-btn{
+  --glow-color: var(--neon-red); /* change to --neon-green for green variant */
+  appearance:none;
+  border:0;
+  cursor:pointer;
+  padding:14px 22px;
+  border-radius:14px;
+  color:white;
+  font-weight:700;
+  letter-spacing:1px;
+  font-size:16px;
+  background: linear-gradient(90deg, rgba(255,40,40,0.12), rgba(255,0,128,0.06));
+  box-shadow:
+    0 4px 28px rgba(255,40,40,0.06),
+    0 0 12px rgba(255,40,40,0.08);
+  position:relative;
+  text-transform:uppercase;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  overflow:visible;
+  border: 1px solid rgba(255,40,40,0.12);
+}
+#cyber-phoenix-btn .label{
+  text-shadow: 0 0 8px rgba(255,80,80,0.6), 0 1px 0 rgba(0,0,0,0.5);
+}
+#cyber-phoenix-btn::after{
+  /* neon stroke */
+  content:"";
+  position:absolute;
+  inset:-6px;
+  border-radius:18px;
+  filter:blur(10px);
+  opacity:0.65;
+  background: radial-gradient(circle at 20% 30%, rgba(255,40,40,0.65), transparent 12%),
+              radial-gradient(circle at 80% 70%, rgba(255,0,120,0.35), transparent 12%);
+  mix-blend-mode:screen;
+  pointer-events:none;
+}
+#cyber-phoenix-btn:hover{
+  transform:translateY(-4px) scale(1.02);
+  box-shadow:
+    0 10px 48px rgba(255,40,40,0.12),
+    0 0 30px rgba(255,40,40,0.16);
+}
+#cyber-phoenix-btn:active{ transform:translateY(-2px) scale(0.995); }
+
+/* small icon/flare inside button (optional) */
+#cyber-phoenix-btn .phoenix-mark{
+  width:28px;height:28px;border-radius:6px;
+  background:linear-gradient(180deg,var(--neon-red),#ff7aa0);
+  box-shadow:0 6px 18px rgba(255,50,50,0.18), 0 0 8px rgba(255,20,20,0.22);
+  display:inline-block;
+}
+
+/* --- Middle: dynamic content box --- */
+#dynamic-box{
+  margin:0 auto;
+  width:100%;
+  min-height:320px;
+  max-height:62vh;
+  overflow:auto;
+  padding:20px;
+  border-radius:16px;
+  background: linear-gradient(180deg, rgba(10,10,12,0.45), rgba(10,10,12,0.35));
+  border: 1px solid rgba(57,255,20,0.06);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  align-items:center;
+  justify-content:flex-start;
+  transition: box-shadow var(--transition-medium);
+}
+
+/* empty placeholder */
+#dynamic-box .empty-msg{
+  width:70%;
+  max-width:620px;
+  color: rgba(180,255,200,0.28);
+  border: 1px dashed rgba(57,255,20,0.06);
+  padding:28px;
+  border-radius:12px;
+  text-align:center;
+  font-size:15px;
+  backdrop-filter: blur(4px);
+}
+
+/* container for dashbird list */
+.dashbird-list{
+  width:100%;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  padding:6px;
+}
+
+/* --- Dashbird element (futuristic green card) --- */
+.dashbird{
+  --glow: rgba(57,255,20,0.16);
+  display:flex;
+  gap:12px;
+  align-items:center;
+  justify-content:space-between;
+  padding:12px 14px;
+  border-radius:12px;
+  background: linear-gradient(90deg, rgba(57,255,20,0.03), rgba(0,0,0,0.18));
+  border:1px solid rgba(57,255,20,0.06);
+  box-shadow:
+    0 6px 26px rgba(0,0,0,0.6),
+    0 0 18px rgba(57,255,20,0.04);
+  transition: transform var(--transition-medium), box-shadow var(--transition-medium), border-color var(--transition-fast);
+  cursor:pointer;
+  position:relative;
+  min-height:64px;
+  overflow:hidden;
+  outline:none;
+}
+
+/* left-side accent strip */
+.dashbird::before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:0;
+  bottom:0;
+  width:6px;
+  background: linear-gradient(180deg, rgba(57,255,20,0.9), rgba(0,210,130,0.6));
+  box-shadow: 0 0 18px rgba(57,255,20,0.28);
+}
+
+/* content layout */
+.dashbird .meta{
+  display:flex;
+  gap:12px;
+  align-items:center;
+  min-width:0;
+  flex:1 1 auto;
+}
+.dashbird .favicon{
+  width:44px;
+  height:44px;
+  border-radius:8px;
+  background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border:1px solid rgba(255,255,255,0.02);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.5), 0 0 10px rgba(57,255,20,0.06);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color: rgba(0,0,0,0.65);
+  font-weight:700;
+  flex:0 0 44px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  font-size:13px;
+}
+.dashbird .details{
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+}
+.dashbird .details .title{
+  font-size:15px;
+  font-weight:700;
+  color: #eaffef;
+  text-overflow:ellipsis;
+  overflow:hidden;
+  white-space:nowrap;
+}
+.dashbird .details .url{
+  font-size:13px;
+  color: rgba(200,255,200,0.7);
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+/* right side controls */
+.dashbird .controls{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  margin-left:12px;
+  flex:0 0 auto;
+}
+
+/* delete button inside dashbird */
+.dashbird .delete-btn{
+  --btn-size:36px;
+  width:var(--btn-size);
+  height:var(--btn-size);
+  display:inline-grid;
+  place-items:center;
+  border-radius:10px;
+  background: linear-gradient(180deg, rgba(255,40,40,0.08), rgba(255,40,40,0.02));
+  border:1px solid rgba(255,40,40,0.06);
+  color:var(--neon-red);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.6);
+  cursor:pointer;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+.dashbird .delete-btn:hover{
+  transform:translateY(-3px);
+  box-shadow: 0 10px 34px rgba(255,40,40,0.08), 0 0 20px rgba(255,40,40,0.12);
+}
+
+/* hover / focus effects on dashbird */
+.dashbird:hover{
+  transform:translateY(-6px) scale(1.01);
+  box-shadow:
+    0 18px 60px rgba(0,0,0,0.7),
+    0 0 36px rgba(57,255,20,0.12),
+    0 0 8px rgba(0,0,0,0.6) inset;
+  border-color: rgba(57,255,20,0.18);
+}
+.dashbird:focus{
+  box-shadow: 0 12px 46px rgba(0,0,0,0.6), 0 0 26px rgba(57,255,20,0.18);
+  transform: translateY(-4px);
+  outline:none;
+}
+
+/* selected state (JS should toggle .selected) */
+.dashbird.selected{
+  transform:scale(1.02);
+  border-color: rgba(57,255,20,0.36);
+  box-shadow:
+    0 20px 80px rgba(0,0,0,0.72),
+    0 0 48px rgba(57,255,20,0.22),
+    0 0 12px rgba(57,255,20,0.28) inset;
+}
+
+/* small tag / badge */
+.dashbird .tag{
+  padding:6px 8px;
+  font-size:12px;
+  border-radius:8px;
+  background: rgba(0,0,0,0.28);
+  color: rgba(220,255,220,0.85);
+  border:1px solid rgba(255,255,255,0.02);
+}
+
+/* transitions for appearance when JS adds them */
+.dashbird.enter{
+  animation: popIn 420ms cubic-bezier(.18,.9,.32,1) both;
+}
+@keyframes popIn{
+  0%{ transform: scale(.96) translateY(6px); opacity:0 }
+  60%{ transform: scale(1.02) translateY(-4px); opacity:1 }
+  100%{ transform: scale(1) translateY(0); opacity:1 }
+}
+
+/* accessible focus ring (keyboard) */
+.dashbird:focus-visible{
+  box-shadow: 0 0 0 4px rgba(57,255,20,0.08), 0 12px 40px rgba(0,0,0,0.6);
+}
+
+/* small responsive tweaks */
+@media (max-width:880px){
+  :root{ --radius:12px; }
+  #top-bar{ gap:10px; align-items:stretch; }
+  #cyber-phoenix-btn{ width:100%; order:3; padding:12px; border-radius:12px; }
+  #url-input{ order:2; width:100%; }
+  #dynamic-box{ min-height:260px; padding:14px; }
+  .dashbird{ padding:10px; min-height:56px; border-radius:10px; }
+  .dashbird .favicon{ width:38px; height:38px; flex:0 0 38px; }
+  .dashbird .delete-btn{ --btn-size:32px; width:32px; height:32px; border-radius:8px; }
+}
+
+/* small-screen stacking */
+@media (max-width:540px){
+  body{ padding:18px; }
+  .site-wrap{ gap:18px; }
+  #dynamic-box .empty-msg{ width:90%; font-size:14px; padding:18px; }
+  .dashbird .details .title{ font-size:14px; }
+  .dashbird .details .url{ font-size:12px; }
+}
+
+/* utility classes */
+.hidden{ display:none!important; }
+.center{ display:flex; align-items:center; justify-content:center; }
+
+/* end of style.css */
