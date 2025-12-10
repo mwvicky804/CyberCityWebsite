@@ -1,45 +1,30 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#0b0b0b" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cyber City</title>
-
-  <!-- Google Fonts for neon/cyberpunk look -->
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
-
-  <!-- Styles -->
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <header>
-    <div class="hero">
-      <h1 class="site-title">Cyber City</h1>
-      <p class="tagline">Enter the neon network</p>
-    </div>
+    <h1>Cyber City</h1>
   </header>
 
   <main>
-    <section class="center-area" aria-labelledby="start-label">
-      <h2 id="start-label" class="visually-hidden">Start</h2>
-      <button id="start-btn" class="neon-btn" aria-label="Start Cyber City experience">Start</button>
-    </section>
+    <div class="input-container">
+      <input type="text" id="urlInput" placeholder="Enter URL here">
+      <button id="addBtn">Start</button>
+    </div>
+    <div id="urlList" class="url-list">
+      <!-- Dynamic cyberpunk dashbird cards will appear here -->
+    </div>
   </main>
 
   <footer>
-    <p class="credits">Made with ⚡ neon by Cyber City</p>
+    <p>&copy; 2025 Cyber City</p>
   </footer>
 
-  <script>
-    // small interactivity: pulse effect and simple feedback on click
-    const btn = document.getElementById('start-btn');
-    btn.addEventListener('click', () => {
-      btn.classList.add('active');
-      setTimeout(() => btn.classList.remove('active'), 800);
-      // placeholder action - replace with real navigation if you want
-      console.log('Start pressed — launch sequence initiated');
-    });
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
